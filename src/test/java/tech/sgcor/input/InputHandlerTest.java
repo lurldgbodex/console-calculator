@@ -118,8 +118,8 @@ class InputHandlerTest {
     }
 
     @Test
-    void testGetNextOperation_yesAsInput() {
-        String input = "yes";
+    void testGetNextOperation_quitAsInput() {
+        String input = "quit";
 
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);

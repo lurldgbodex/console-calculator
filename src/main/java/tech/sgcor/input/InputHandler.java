@@ -1,6 +1,7 @@
 package tech.sgcor.input;
 
 import tech.sgcor.exceptions.QuitException;
+import tech.sgcor.history.CalculationHistory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -8,9 +9,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InputHandler {
+    private CalculationHistory history;
+
+    public  void setCalculationHistory(CalculationHistory history) {
+        this.history = history;
+    }
+
     public InputData getUserInput() {
        String cmd = "Enter the expression (eg. 3 + 5): ";
        String input = promptUser(cmd);
+       if (input.equalsIgnoreCase("history")) {
+           displayHistory();
+           return getUserInput();
+       }
+       if (input.equalsIgnoreCase("clear history")) {
+           history.clearHistory();
+           return getUserInput();
+       }
        return parseInput(input);
     }
 
@@ -18,7 +33,7 @@ public class InputHandler {
         String cmd = "Enter the next operator and number (e.g., + 5), or type 'clear' to reset: " + prev + " ";
         String input = promptUser(cmd);
 
-        if (input.equalsIgnoreCase("yes")) {
+        if (input.equalsIgnoreCase("quit")) {
             throw new QuitException("I want to quit");
         }
 
@@ -116,5 +131,12 @@ public class InputHandler {
             case "log", "sin", "cos", "tan", "sqrt" -> true;
             default -> false;
         };
+    }
+
+    private void displayHistory() {
+        System.out.println("** Calculation History **");
+        for (String entry : history.getHistory()) {
+            System.out.println(entry);
+        }
     }
 }
