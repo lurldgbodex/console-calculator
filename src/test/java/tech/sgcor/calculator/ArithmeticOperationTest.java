@@ -1,7 +1,6 @@
 package tech.sgcor.calculator;
 
 import org.junit.jupiter.api.Test;
-import tech.sgcor.calculator.ArithmeticOperation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -95,5 +94,114 @@ class ArithmeticOperationTest {
         assertThat(result7).isEqualTo(11);
         assertThat(result8).isEqualTo(11.5);
         assertThat(result9).isEqualTo(18);
+    }
+
+    @Test
+    void testPower() {
+        Number result1 = arithmeticOperation.power(5, 2);
+        Number result2 = arithmeticOperation.power(-2, 2);
+        Number result3 = arithmeticOperation.power(2, -2);
+        Number result4 = arithmeticOperation.power(-2, -3);
+        Number result5 = arithmeticOperation.power(5, 0);
+        Number result6 = arithmeticOperation.power(0, 2);
+        Number result7 = arithmeticOperation.power(10, 0);
+        Number result8 = arithmeticOperation.power(5.1, 2);
+
+        assertThat(result1).isEqualTo(25);
+        assertThat(result2).isEqualTo(4);
+        assertThat(result3).isEqualTo(0.25);
+        assertThat(result4).isEqualTo(-0.125);
+        assertThat(result5).isEqualTo(1);
+        assertThat(result6).isEqualTo(0);
+        assertThat(result7).isEqualTo(1);
+        assertThat(result8).asString().startsWith("26.00999");
+    }
+
+    @Test
+    void testSqrt() {
+        Number result1 = arithmeticOperation.sqrt(25);
+        Number result2 = arithmeticOperation.sqrt(10);
+        Number result3 = arithmeticOperation.sqrt(8398576);
+        Number result4 = arithmeticOperation.sqrt(0);
+
+        assertThat(result1).isEqualTo(5);
+        assertThat(result2).asString().startsWith("3.16227");
+        assertThat(result3).asString().startsWith("2898.0296");
+        assertThat(result4).isEqualTo(0);
+
+        assertThatThrownBy(() -> arithmeticOperation.sqrt(-25))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Cannot calculate square root of a negative number.");
+
+    }
+
+    @Test
+    void testLog() {
+        Number result1 = arithmeticOperation.log(10);
+        Number result2 = arithmeticOperation.log(88);
+        Number result3 = arithmeticOperation.log(1);
+
+        assertThat(result1).isEqualTo(1);
+        assertThat(result2).asString().startsWith("1.94448");
+        assertThat(result3).isEqualTo(0);
+
+        assertThatThrownBy(() -> arithmeticOperation.log(0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Logarithm is undefined for non-positive values.");
+
+        assertThatThrownBy(() -> arithmeticOperation.log(-10))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Logarithm is undefined for non-positive values.");
+    }
+
+    @Test
+    void testSin() {
+        Number result1 = arithmeticOperation.sin(0);
+        Number result2 = arithmeticOperation.sin(-1);
+        Number result3 = arithmeticOperation.sin(-25.8);
+        Number result4 = arithmeticOperation.sin(5);
+        Number result5 = arithmeticOperation.sin(15.2);
+        Number result6 = arithmeticOperation.sin(18.333);
+
+        assertThat(result1).isEqualTo(0);
+        assertThat(result2).asString().startsWith("-0.841470984");
+        assertThat(result3).asString().startsWith("-0.618835022");
+        assertThat(result4).asString().startsWith("-0.958924274");
+        assertThat(result5).asString().startsWith("0.4863986888");
+        assertThat(result6).asString().startsWith("-0.493888359");
+    }
+
+    @Test
+    void testCos() {
+        Number result1 = arithmeticOperation.cos(0);
+        Number result2 = arithmeticOperation.cos(-1);
+        Number result3 = arithmeticOperation.cos(-25.8);
+        Number result4 = arithmeticOperation.cos(5);
+        Number result5 = arithmeticOperation.cos(15.2);
+        Number result6 = arithmeticOperation.cos(18.333);
+
+        assertThat(result1).isEqualTo(1);
+        assertThat(result2).asString().startsWith("0.54030230");
+        assertThat(result3).asString().startsWith("0.78552098");
+        assertThat(result4).asString().startsWith("0.28366218");
+        assertThat(result5).asString().startsWith("-0.8737369");
+        assertThat(result6).asString().startsWith("0.86952532");
+    }
+
+    @Test
+    void testTan() {
+        Number result1 = arithmeticOperation.tan(0);
+        Number result2 = arithmeticOperation.tan(-1);
+        Number result3 = arithmeticOperation.tan(-25.8);
+        Number result4 = arithmeticOperation.tan(5);
+        Number result5 = arithmeticOperation.tan(15.2);
+        Number result6 = arithmeticOperation.tan(18.333);
+
+        assertThat(result1).isEqualTo(0);
+        assertThat(result2).asString().startsWith("-1.5574077");
+        assertThat(result3).asString().startsWith("-0.7878020");
+        assertThat(result4).asString().startsWith("-3.3805150");
+        assertThat(result5).asString().startsWith("-0.5566877");
+        assertThat(result6).asString().startsWith("-0.5679976");
     }
 }

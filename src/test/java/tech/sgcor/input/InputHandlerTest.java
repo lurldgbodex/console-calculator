@@ -4,15 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tech.sgcor.exceptions.QuitException;
-import tech.sgcor.input.InputData;
-import tech.sgcor.input.InputHandler;
 
 import java.io.ByteArrayInputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
-
 
 @ExtendWith(MockitoExtension.class)
 class InputHandlerTest {
@@ -140,5 +137,89 @@ class InputHandlerTest {
         assertThatThrownBy(() -> inputHandler.getNextOperator(8))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("invalid number format. Enter a valid number");
+    }
+
+    @Test
+    void testAdvancedOperation_sinFunctionInput() {
+        String input = "sin(5)";
+
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        InputData result = inputHandler.getUserInput();
+
+        assertThat(result.operand1()).isEqualTo(5);
+        assertThat(result.operator()).isEqualTo("sin");
+        assertThat(result.operand2()).isEqualTo(0);
+    }
+
+    @Test
+    void testAdvancedOperation_cosFunctionInput() {
+        String input = "cos(180)";
+
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        InputData result = inputHandler.getUserInput();
+
+        assertThat(result.operand1()).isEqualTo(180);
+        assertThat(result.operator()).isEqualTo("cos");
+        assertThat(result.operand2()).isEqualTo(0);
+    }
+
+    @Test
+    void testAdvancedOperation_tanFunction() {
+        String input = "tan(8)";
+
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        InputData result = inputHandler.getUserInput();
+
+        assertThat(result.operand1()).isEqualTo(8);
+        assertThat(result.operator()).isEqualTo("tan");
+        assertThat(result.operand2()).isEqualTo(0);
+    }
+
+    @Test
+    void testAdvancedOperation_sqrtFunction() {
+        String input = "sqrt(4)";
+
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        InputData result = inputHandler.getUserInput();
+
+        assertThat(result.operand1()).isEqualTo(4);
+        assertThat(result.operator()).isEqualTo("sqrt");
+        assertThat(result.operand2()).isEqualTo(0);
+    }
+
+    @Test
+    void testAdvancedOperation_logFunction() {
+        String input = "log(10)";
+
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        InputData result = inputHandler.getUserInput();
+
+        assertThat(result.operand1()).isEqualTo(10);
+        assertThat(result.operator()).isEqualTo("log");
+        assertThat(result.operand2()).isEqualTo(0);
+    }
+
+    @Test
+    void testAdvancedOperation_powerFunction() {
+        String input = "5 ^ 2";
+
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        InputData result = inputHandler.getUserInput();
+
+        assertThat(result.operand1()).isEqualTo(5);
+        assertThat(result.operator()).isEqualTo("^");
+        assertThat(result.operand2()).isEqualTo(2);
     }
 }
