@@ -22,6 +22,10 @@ public class InputHandler {
            displayHistory();
            return getUserInput();
        }
+       if (input.equalsIgnoreCase("clear history")) {
+           history.clearHistory();
+           return getUserInput();
+       }
        return parseInput(input);
     }
 

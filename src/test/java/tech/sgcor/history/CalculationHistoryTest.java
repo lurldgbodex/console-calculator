@@ -24,4 +24,14 @@ class CalculationHistoryTest {
         assertThat(underTest.getHistory()).hasSize(2);
         assertThat(underTest.getHistory()).contains(expected1, expected2);
     }
+
+    @Test
+    void testCalculationHistory_clearHistory() {
+        underTest.addToHistory("3 + 5", 8);
+
+        assertThat(underTest.getHistory()).hasSize(1);
+
+        underTest.clearHistory();
+        assertThat(underTest.getHistory()).hasSize(0);
+    }
 }

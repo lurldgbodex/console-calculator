@@ -18,4 +18,8 @@ public class CalculationHistory {
     public List<String> getHistory() {
         return history;
     }
+
+    public void clearHistory() {
+        history.clear();
+    }
 }
