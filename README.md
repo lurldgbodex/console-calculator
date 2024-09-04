@@ -52,7 +52,7 @@ After building, you can run the application from the command line:
 2. Using the Calculator
 Follow the on-screen prompts to perform arithmetic operations. Example:
 ```bash
-Welcome to Console Calculator!
+Welcome to Console ArithmeticOperation!
 Please enter the first number: 10
 Please enter the operator (+, -, *, /): +
 Please enter the second number: 5
