@@ -6,8 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tech.sgcor.calculator.ArithmeticOperation;
-import tech.sgcor.calculator.Calculator;
 import tech.sgcor.exceptions.QuitException;
 import tech.sgcor.input.InputData;
 import tech.sgcor.input.InputHandler;
@@ -38,7 +36,7 @@ class CalculatorTest {
         when(inputHandler.getUserInput()).thenReturn(firstInput);
         doThrow(new QuitException("quit")).when(inputHandler).getNextOperator(4.0);
 
-        calculator.Start();
+        calculator.start();
 
         verify(inputHandler, times(1)).getUserInput();
         verify(inputHandler, times(1)).getNextOperator(4.0);
@@ -60,7 +58,7 @@ class CalculatorTest {
         when(inputHandler.getNextOperator(16.0)).thenReturn(thirdInput);
         doThrow(QuitException.class).when(inputHandler).getNextOperator(10.0);
 
-        calculator.Start();
+        calculator.start();
 
         verify(inputHandler, times(1)).getUserInput();
         verify(inputHandler, times(1)).getNextOperator(8.0);
@@ -73,7 +71,7 @@ class CalculatorTest {
         InputData inputData = new InputData(5, "invalid", 5);
         when(inputHandler.getUserInput()).thenReturn(inputData);
 
-        assertThatThrownBy(calculator::Start)
+        assertThatThrownBy(calculator::start)
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("invalid operator: " + inputData.operator());
     }
