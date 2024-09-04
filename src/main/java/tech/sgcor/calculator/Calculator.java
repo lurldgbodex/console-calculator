@@ -23,6 +23,12 @@ public class Calculator {
             case "-" -> arithmeticOperation.subtract(num1, num2);
             case "/" -> arithmeticOperation.divide(num1, num2);
             case "*" -> arithmeticOperation.multiply(num1, num2);
+            case "^" -> arithmeticOperation.power(num1, num2);
+            case "sqrt" -> arithmeticOperation.sqrt(num1);
+            case "log" -> arithmeticOperation.log(num1);
+            case "sin" -> arithmeticOperation.sin(num1);
+            case "cos" -> arithmeticOperation.cos(num1);
+            case "tan" -> arithmeticOperation.tan(num1);
             default -> throw new IllegalArgumentException("invalid operator: " + operator);
         };
     }
