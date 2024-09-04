@@ -27,7 +27,7 @@ public class Calculator {
         };
     }
 
-    public void Start() {
+    public void start() {
         Number result;
         InputData input = inputHandler.getUserInput();
         result = calculate(input);
