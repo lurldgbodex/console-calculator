@@ -1,13 +1,20 @@
-package tech.sgcor;
+package tech.sgcor.input;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import tech.sgcor.exceptions.QuitException;
+import tech.sgcor.input.InputData;
+import tech.sgcor.input.InputHandler;
 
 import java.io.ByteArrayInputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 
+@ExtendWith(MockitoExtension.class)
 class InputHandlerTest {
     private final InputHandler inputHandler = new InputHandler();
     @Test
@@ -67,6 +74,70 @@ class InputHandlerTest {
         System.setIn(in);
 
         assertThatThrownBy(inputHandler::getUserInput)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("invalid number format. Enter a valid number");
+    }
+
+    @Test
+    void testGetNextOperation_validInput() {
+        String input = "/ 8";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        InputData result = inputHandler.getNextOperator(16);
+
+        assertThat(result.operand1()).isEqualTo(16);
+        assertThat(result.operator()).isEqualTo("/");
+        assertThat(result.operand2()).isEqualTo(8);
+    }
+
+    @Test
+    void testGetNextOperation_invalidInput() {
+        String input = "//8";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        assertThatThrownBy(() -> inputHandler.getNextOperator(8))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("invalid input format. sample format: '+ 2'");
+    }
+
+    @Test
+    void testGetNextOperation_clearAsInput() {
+        InputHandler mockHandler = spy(new InputHandler());
+
+        InputData inputData = new InputData(3, "+", 5);
+        doReturn(inputData).when(mockHandler).getUserInput();
+
+        String input = "clear";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        InputData result = mockHandler.getNextOperator(10);
+
+        assertThat(result.operand1()).isEqualTo(3);
+        assertThat(result.operand2()).isEqualTo(5);
+        assertThat(result.operator()).isEqualTo("+");
+    }
+
+    @Test
+    void testGetNextOperation_yesAsInput() {
+        String input = "yes";
+
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        assertThatThrownBy(() -> inputHandler.getNextOperator(5))
+                .isInstanceOf(QuitException.class);
+    }
+
+    @Test
+    void testGetNextOperation_illegalInput() {
+        String input = "* nine";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        assertThatThrownBy(() -> inputHandler.getNextOperator(8))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("invalid number format. Enter a valid number");
     }

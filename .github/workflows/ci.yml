@@ -25,10 +25,10 @@ jobs:
         run: mvn clean install
 
       - name: Run PMD
-        run: mvn pmd:check
+        run: mvn clean pmd:check
 
       - name: Run SpotBugs
-        run: mvn spotbugs:check
+        run: mvn clean spotbugs:check
 
       - name: Upload PMD Report
         if: always()

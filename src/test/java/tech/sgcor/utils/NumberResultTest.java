@@ -1,6 +1,7 @@
-package tech.sgcor;
+package tech.sgcor.utils;
 
 import org.junit.jupiter.api.Test;
+import tech.sgcor.utils.NumberResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
