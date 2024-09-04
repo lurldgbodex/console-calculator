@@ -1,4 +1,4 @@
-package tech.sgcor;
+package tech.sgcor.utils;
 
 public class NumberResult {
     private final Number value;

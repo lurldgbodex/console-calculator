@@ -1,9 +1,11 @@
-package tech.sgcor;
+package tech.sgcor.calculator;
+
+import tech.sgcor.utils.NumberResult;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 
-public class Calculator {
+public class ArithmeticOperation {
    public Number add(double num1, double num2) {
        double result = num1 + num2;
        if (result % 1 == 0) {
