@@ -18,7 +18,7 @@ public class Calculator {
         this.inputHandler.setCalculationHistory(history);
     }
 
-    private Number calculate(InputData input) {
+    public Number calculate(InputData input) {
         double num1 = input.operand1();
         double num2 = input.operand2();
         String operator = input.operator();
@@ -94,9 +94,19 @@ public class Calculator {
             try {
                 InputData nextInput = inputHandler.getNextOperator(result);
                 result = calculate(nextInput);
+            } catch (IllegalArgumentException ie) {
+                System.out.println(ie.getMessage());
             } catch (QuitException qe) {
                 break;
             }
         }
+    }
+
+    public void displayHistory() {
+        history.displayHistory();
+    }
+
+    public void clearHistory() {
+        history.clearHistory();
     }
 }

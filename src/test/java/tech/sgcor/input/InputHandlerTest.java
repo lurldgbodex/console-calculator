@@ -1,11 +1,14 @@
 package tech.sgcor.input;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tech.sgcor.exceptions.QuitException;
 
-import java.io.ByteArrayInputStream;
+import java.util.Scanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -13,7 +16,20 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class InputHandlerTest {
-    private final InputHandler inputHandler = new InputHandler();
+    @Mock
+    private Scanner scanner;
+    private InputHandler inputHandler;
+
+    @BeforeEach
+    void setup() {
+        inputHandler = new InputHandler(scanner);
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.setIn(System.in);
+    }
+
     @Test
     void testParseInput_ValidInput() {
         String input = "3.0 + 5.8";
@@ -53,9 +69,8 @@ class InputHandlerTest {
 
     @Test
     void testGetUserInput_success() {
-        String input = "2 + 1";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        String input = "2 + 1\n";
+        when(scanner.nextLine()).thenReturn(input);
 
         InputData result = inputHandler.getUserInput();
 
@@ -67,8 +82,7 @@ class InputHandlerTest {
     @Test
     void testGetUserInput_failure() {
         String input = "two * 0";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         assertThatThrownBy(inputHandler::getUserInput)
                 .isInstanceOf(IllegalArgumentException.class)
@@ -78,8 +92,7 @@ class InputHandlerTest {
     @Test
     void testGetNextOperation_validInput() {
         String input = "/ 8";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         InputData result = inputHandler.getNextOperator(16);
 
@@ -91,8 +104,7 @@ class InputHandlerTest {
     @Test
     void testGetNextOperation_invalidInput() {
         String input = "//8";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         assertThatThrownBy(() -> inputHandler.getNextOperator(8))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -101,14 +113,13 @@ class InputHandlerTest {
 
     @Test
     void testGetNextOperation_clearAsInput() {
-        InputHandler mockHandler = spy(new InputHandler());
+        InputHandler mockHandler = spy(new InputHandler(scanner));
 
         InputData inputData = new InputData(3, "+", 5);
         doReturn(inputData).when(mockHandler).getUserInput();
 
         String input = "clear";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         InputData result = mockHandler.getNextOperator(10);
 
@@ -120,9 +131,7 @@ class InputHandlerTest {
     @Test
     void testGetNextOperation_quitAsInput() {
         String input = "quit";
-
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         assertThatThrownBy(() -> inputHandler.getNextOperator(5))
                 .isInstanceOf(QuitException.class);
@@ -131,8 +140,7 @@ class InputHandlerTest {
     @Test
     void testGetNextOperation_illegalInput() {
         String input = "* nine";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         assertThatThrownBy(() -> inputHandler.getNextOperator(8))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -142,9 +150,7 @@ class InputHandlerTest {
     @Test
     void testAdvancedOperation_sinFunctionInput() {
         String input = "sin(5)";
-
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         InputData result = inputHandler.getUserInput();
 
@@ -156,9 +162,7 @@ class InputHandlerTest {
     @Test
     void testAdvancedOperation_cosFunctionInput() {
         String input = "cos(180)";
-
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         InputData result = inputHandler.getUserInput();
 
@@ -170,9 +174,7 @@ class InputHandlerTest {
     @Test
     void testAdvancedOperation_tanFunction() {
         String input = "tan(8)";
-
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         InputData result = inputHandler.getUserInput();
 
@@ -184,9 +186,7 @@ class InputHandlerTest {
     @Test
     void testAdvancedOperation_sqrtFunction() {
         String input = "sqrt(4)";
-
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         InputData result = inputHandler.getUserInput();
 
@@ -198,9 +198,7 @@ class InputHandlerTest {
     @Test
     void testAdvancedOperation_logFunction() {
         String input = "log(10)";
-
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         InputData result = inputHandler.getUserInput();
 
@@ -212,9 +210,7 @@ class InputHandlerTest {
     @Test
     void testAdvancedOperation_powerFunction() {
         String input = "5 ^ 2";
-
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        when(scanner.nextLine()).thenReturn(input);
 
         InputData result = inputHandler.getUserInput();
 
