@@ -3,13 +3,17 @@ package tech.sgcor.input;
 import tech.sgcor.exceptions.QuitException;
 import tech.sgcor.history.CalculationHistory;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InputHandler {
     private CalculationHistory history;
+    private final Scanner scanner;
+
+    public InputHandler(Scanner scanner){
+        this.scanner = scanner;
+    }
 
     public  void setCalculationHistory(CalculationHistory history) {
         this.history = history;
@@ -19,7 +23,7 @@ public class InputHandler {
        String cmd = "Enter the expression (eg. 3 + 5): ";
        String input = promptUser(cmd);
        if (input.equalsIgnoreCase("history")) {
-           displayHistory();
+           history.displayHistory();
            return getUserInput();
        }
        if (input.equalsIgnoreCase("clear history")) {
@@ -41,26 +45,46 @@ public class InputHandler {
             return getUserInput();
         }
 
+        if (isValidFunction(input)) {
+            String validInput = input + "(" + prev + ")";
+            return parseInput(validInput);
+        }
+
         return parseInput(input, prev);
     }
 
     private String promptUser(String cmd) {
-        try (Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8)) {
-            System.out.print(cmd);
-            return scanner.nextLine().trim();
-        }
+        System.out.print(cmd);
+        return scanner.nextLine().trim();
     }
 
     public InputData parseInput(String input) {
         return parseInput(input, null);
     }
 
+    public void displayHelp() {
+        System.out.println("\n=== HELP MENU ===");
+        System.out.println("1. Arithmetic operations: Enter in the format 'operand1 operator operand2'");
+        System.out.println(" Supported operators: +, -, *, /, ^");
+        System.out.println("2. Function operations: Enter in the format 'function(operand)'");
+        System.out.println(" Supported functions: log, sin, cos, tan, sqrt");
+        System.out.println("3. View calculation history: Type 'history'.");
+        System.out.println("4. Clear calculation history: Type 'clear history'");
+        System.out.println("5. Quit the CLI: Type 'quit or exit'.");
+        System.out.println("6. Show this help menu: Type 'help'.\n");
+    }
+
     private InputData parseInput(String input, Number prevResult) {
+        input = input.trim();
+
         if (input.matches("[a-zA-Z]+\\([^)]+\\)")) {
             return parseFunctionInput(input);
         }
 
-        String[] parts = input.split("\\s+");
+        input = input.replaceAll("\\s*([+\\-*/^])\\s*", " $1 "); // Add spaces around operators
+        input = input.replaceAll("\\s+", " ");
+
+        String[] parts = input.split(" ");
         if (prevResult == null) {
             return validateInput(parts);
         } else {
@@ -107,13 +131,13 @@ public class InputHandler {
         }
     }
     private InputData validateNextOperatorInput(String[] input, Number prev) {
-        if (input.length != 2) {
+        if (input.length != 3) {
             throw new IllegalArgumentException("invalid input format. sample format: '+ 2'");
         }
 
         double operand1 = prev.doubleValue();
-        String operator = validateOperator(input[0]);
-        double operand2 = parseOperand(input[1]);
+        String operator = validateOperator(input[1]);
+        double operand2 = parseOperand(input[2]);
 
         return new InputData(operand1, operator, operand2);
     }
@@ -131,12 +155,5 @@ public class InputHandler {
             case "log", "sin", "cos", "tan", "sqrt" -> true;
             default -> false;
         };
-    }
-
-    private void displayHistory() {
-        System.out.println("** Calculation History **");
-        for (String entry : history.getHistory()) {
-            System.out.println(entry);
-        }
     }
 }

@@ -19,7 +19,20 @@ public class CalculationHistory {
         return history;
     }
 
+    public void displayHistory() {
+        System.out.println("** Calculation History **");
+        if (history.size() < 1) {
+            System.out.println("No history found.");
+            return;
+        }
+
+        for (String entry : history) {
+            System.out.println(entry);
+        }
+    }
+
     public void clearHistory() {
         history.clear();
+        System.out.println("history cleared");
     }
 }
